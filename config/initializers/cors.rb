@@ -1,6 +1,6 @@
-Rails.appication.config.middleware.insert_before 0, Rack::Cors do
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    orgins "*"
+    origins "*" # "origins" instead of "orgins"
     resource "*", headers: :any, methods: %i[get post patch put delete]
   end
 end
