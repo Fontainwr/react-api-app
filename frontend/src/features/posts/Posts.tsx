@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {useAppSelector } from "../../app/hooks";
 import { fetchPostsAsync, selectPosts, selectStatus, Statuses } from './postSlice';
 import { useDispatch } from 'react-redux';
+import PostForm from './PostForm';
 import Post from './Post';
 
 function Posts() {
@@ -21,7 +22,7 @@ function Posts() {
       contents = <div className="card">
         <div className="card-body">
             <h3>{status}</h3>
-            {/** form goes here */}
+            <PostForm />
             {posts && posts.length > 0 && posts.map(post => (
   <div key={post.id} style={{ margin: "5em" }}>
     <Post dispatch={dispatch} post={post} /> {/* Add closing angle bracket here */}
