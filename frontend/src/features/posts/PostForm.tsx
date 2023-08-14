@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import {createPostAsync} from './postSlice';
 
 function PostForm() {
   const dispatch = useDispatch();
@@ -13,7 +15,7 @@ function PostForm() {
         body: body,
       }
     }
-    dispatch(createPostAsync(formData));
+    dispatch(createPostAsync(formData) as any); // Replace 'any' with the correct type if needed
     resetState();
   }
 
@@ -22,7 +24,7 @@ function PostForm() {
     setBody('');
   }
 
-return <div>
+  return <div>
     <h1>PostForm</h1>
     <form>
       <input
@@ -44,6 +46,5 @@ return <div>
     </form>
   </div>;
 }
-
 
 export default PostForm;
