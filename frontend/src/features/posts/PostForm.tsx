@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import {createPostAsync} from './postSlice';
+import { useAppDispatch } from '../../app/hooks'; // Make sure to import useAppDispatch
+import { createPostAsync, PostFormData } from './postSlice'; // Make sure to import PostFormData
 
 function PostForm() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch(); // Use useAppDispatch hook
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
-  function submitHandler(e:any) {
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = {
+    const formData: PostFormData = {
       post: {
         title: title,
         body: body,
-      }
-    }
-    dispatch(createPostAsync(formData) as any); // Replace 'any' with the correct type if needed
+      },
+    };
+    await dispatch(createPostAsync(formData));
     resetState();
   }
 
@@ -24,27 +24,27 @@ function PostForm() {
     setBody('');
   }
 
-  return <div>
-    <h1>PostForm</h1>
-    <form>
-      <input
-        type="text"
-        className="form-control text-start"
-        name="title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+  return (
+    <div>
+      <h1>PostForm</h1>
+      <form onSubmit={submitHandler}>
+        <input
+          type="text"
+          className="form-control text-start"
+          name="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
-      <textarea
-        className="form-control text-start"
-        name="body"
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
+        <textarea
+          className="form-control text-start"
+          name="body"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
         />
-        <button
-          type="submit"
-          onClick={(e) => submitHandler(e)}>Submit</button>
-    </form>
-  </div>;
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
 }
 
 export default PostForm;
