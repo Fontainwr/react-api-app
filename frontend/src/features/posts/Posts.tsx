@@ -1,18 +1,33 @@
-import React, { useEffect } from 'react';
-import {useAppSelector } from "../../app/hooks";
-import { fetchPostsAsync, selectPosts, selectStatus, Statuses } from './postSlice';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import PostForm from './PostForm';
+import {useAppSelector } from "../../app/hooks";
 import Post from './Post';
+import PostForm from './PostForm';
+import { fetchPostsAsync, selectPosts, selectStatus, Statuses, updatePostAsync } from './postSlice';
 
 function Posts() {
   const posts = useAppSelector(selectPosts);
   const status = useAppSelector(selectStatus)
   const dispatch = useDispatch();
 
+  const [postToEdit, setPostToEdit] = useState(0);
+
   useEffect(() => {
     dispatch(fetchPostsAsync() as any);
   }, [dispatch])
+
+  function toggleEditForm(post_id?:number) {
+      if (postToEdit === post_id) {
+          setPostToEdit(0);
+      } else {
+            setPostToEdit(post_id as number);
+      }
+  }
+
+  function submitEdit(formData:any) {
+      dispatch(updatePostAsync(formData) as any);
+      toggleEditForm();
+  }
 
   let contents;
 
@@ -23,11 +38,17 @@ function Posts() {
         <div className="card-body">
             <h3>{status}</h3>
             <PostForm />
-            {posts && posts.length > 0 && posts.map(post => (
-  <div key={post.id} style={{ margin: "5em" }}>
-    <Post dispatch={dispatch} post={post} /> {/* Add closing angle bracket here */}
-  </div>
-))}
+            {posts && posts.length > 0 && posts.map(post => {
+                return <div key={post.id} style={{margin:"5em"}}>
+                    <Post
+                        dispatch={dispatch}
+                        post={post}
+                        toggleEditForm={() => toggleEditForm(post.id)}
+                        postToEdit={postToEdit}
+                        submitEdit={submitEdit}
+                    />
+                </div>
+            })}
             </div>
       </div>
   }
